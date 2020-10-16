@@ -31,57 +31,70 @@
                     <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)">
                     </el-switch>
                 </template>
-            </el-table-column>
-            <el-table-column label="操作" width="180px">
-                <template slot-scope="scope">
+</el-table-column>
+<el-table-column label="操作" width="180px">
+    <template slot-scope="scope">
                     <el-button type="primary" icon="el-icon-edit" size="mini" @click="showUser(scope.row.id)"></el-button>
                     <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteUser(scope.row.id)"></el-button>
                     <el-tooltip effect="dark" content="分配角色" placement="top" :enterable="fasle">
-                        <el-button type="warning" icon="el-icon-setting" size="mini"></el-button>
+                        <el-button type="warning" icon="el-icon-setting" size="mini" @click="allotRole(scope.row)"></el-button>
                     </el-tooltip>
                 </template>
-            </el-table-column>
-        </el-table>
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-        </el-pagination>
-    </el-card>
-    <el-dialog title="添加用户" :visible.sync="dialogVisible" @close="formReset">
-        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px">
-            <el-form-item label="用户名" prop="username">
-                <el-input v-model="ruleForm.username"></el-input>
-            </el-form-item>
-            <el-form-item label="密码" prop="password">
-                <el-input v-model="ruleForm.password"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-                <el-input v-model="ruleForm.email"></el-input>
-            </el-form-item>
-            <el-form-item label="电话" prop="mobile">
-                <el-input v-model="ruleForm.mobile"></el-input>
-            </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
+</el-table-column>
+</el-table>
+<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="queryInfo.pagenum" :page-sizes="[1, 2, 5, 10]" :page-size="queryInfo.pagesize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+</el-pagination>
+</el-card>
+<el-dialog title="添加用户" :visible.sync="dialogVisible" @close="formReset">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="70px">
+        <el-form-item label="用户名" prop="username">
+            <el-input v-model="ruleForm.username"></el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+            <el-input v-model="ruleForm.password"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+            <el-input v-model="ruleForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+            <el-input v-model="ruleForm.mobile"></el-input>
+        </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="addUser">确 定</el-button>
         </span>
-    </el-dialog>
-    <el-dialog title="修改用户信息" :visible.sync="editdialogVisible" @close="editFormReset">
-        <el-form :model="editForm" :rules="editFormrules" ref="editRuleForm" label-width="70px">
-            <el-form-item label="用户名">
-                <el-input v-model="editForm.username" disabled></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-                <el-input v-model="editForm.email"></el-input>
-            </el-form-item>
-            <el-form-item label="电话" prop="mobile">
-                <el-input v-model="editForm.mobile"></el-input>
-            </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
+</el-dialog>
+<el-dialog title="修改用户信息" :visible.sync="editdialogVisible" @close="editFormReset">
+    <el-form :model="editForm" :rules="editFormrules" ref="editRuleForm" label-width="70px">
+        <el-form-item label="用户名">
+            <el-input v-model="editForm.username" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
+            <el-input v-model="editForm.email"></el-input>
+        </el-form-item>
+        <el-form-item label="电话" prop="mobile">
+            <el-input v-model="editForm.mobile"></el-input>
+        </el-form-item>
+    </el-form>
+    <span slot="footer" class="dialog-footer">
             <el-button @click="editdialogVisible = false">取 消</el-button>
             <el-button type="primary" @click="editUsers">确 定</el-button>
         </span>
-    </el-dialog>
+</el-dialog>
+<el-dialog title="分配角色" :visible.sync="allotRoledialogVisible" width="50%" @closed="setAllotClosed">
+    <p>当前的用户：{{userInfo.username}}</p>
+    <p>当前的角色：{{userInfo.role_name}}</p>
+    角色列表：
+    <el-select v-model="selectRole" placeholder="请选择">
+        <el-option v-for="item in rolesList" :key="item.id" :label="item.roleName" :value="item.id">
+        </el-option>
+    </el-select>
+    <span slot="footer" class="dialog-footer">
+    <el-button @click="allotRoledialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="setAllotRole()">确 定</el-button>
+  </span>
+</el-dialog>
 </div>
 </template>
 
@@ -122,26 +135,22 @@ export default {
           required: true,
           message: '请输入用户名',
           trigger: 'blur'
-        },
-        {
+        }, {
           min: 3,
           max: 10,
           message: '长度在 3 到 10 个字符',
           trigger: 'blur'
-        }
-        ],
+        }],
         password: [{
           required: true,
           message: '请输入密码',
           trigger: 'blur'
-        },
-        {
+        }, {
           min: 6,
           max: 15,
           message: '长度在 6 到 15 个字符',
           trigger: 'blur'
-        }
-        ],
+        }],
         email: [{
           required: true,
           message: '请输入邮箱',
@@ -176,7 +185,11 @@ export default {
           validator: checkMobile,
           trigger: 'blur'
         }]
-      }
+      },
+      allotRoledialogVisible: false,
+      userInfo: {},
+      rolesList: {},
+      selectRole: ''
     }
   },
   created () {
@@ -290,8 +303,43 @@ export default {
           this.getUserList()
         }
       }
+    },
+    async allotRole (role) {
+      this.allotRoledialogVisible = true
+      this.userInfo = role
+      const {
+        data: res
+      } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取角色列表失败')
+      } else {
+        this.rolesList = res.data
+      }
+    },
+    // 更新分配角色
+    async setAllotRole () {
+      if (!this.selectRole) {
+        this.$message.error('请选择要更新的角色')
+      } else {
+        const {
+          data: res
+        } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+          rid: this.selectRole
+        })
+        if (res.meta.status !== 200) {
+          return this.$message.error('设置角色失败')
+        } else {
+          this.$message.success('设置角色成功')
+          this.getUserList()
+          this.allotRoledialogVisible = false
+        }
+      }
+    },
+    // 重置选择角色
+    setAllotClosed () {
+      this.selectRole = ''
+      this.userInfo = {}
     }
-
   }
 }
 </script>
