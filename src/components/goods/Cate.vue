@@ -12,7 +12,7 @@
                 <el-col>
                     <el-button type="primary" @click="showAddCate()">添加分类</el-button>
                 </el-col>
-            </el-row>  
+            </el-row>
                <!-- 内容区域 -->
                <tree-table class="treeTable" :expand-type='false' :selection-type="false" :data="cateList" :columns="columns" show-index :show-row-hover="false" border>
                    <template slot="isok" slot-scope='scoped'>
@@ -53,146 +53,145 @@
 </div>
 </template>
 <script>
-    export default {
-        data() {
-            return {
-                // 接收返回数据
-                cateList: [],
-                queryInfo: {
-                    type: 3,
-                    pagenum: 1,
-                    pagesize: 5
-                },
-                // 返回数据总条数
-                total: 0,
-                columns: [{
-                    label: '分类名称',
-                    prop: 'cat_name',
-                }, {
-                    label: '是否有效',
-                    type: 'template',
-                    template: 'isok'
-                }, {
-                    label: '排序',
-                    type: 'template',
-                    template: 'order'
-                }, {
-                    label: '操作',
-                    type: 'template',
-                    template: 'opt'
-                }],
-                addCateAialogVisible: false,
-                addCateRuleForm: {
-                    cat_pid: 0,
-                    cat_name: '',
-                    cat_level: 0
-                },
-                addCateRules: {
-                    cat_name: {
-                        required: true,
-                        message: '请输入分类名称',
-                        trigger: 'blur'
-                    }
-                },
-                parentCateList: [],
-                parentCateprop: {
-                    value: "cat_id",
-                    label: "cat_name",
-                    children: "children",
-                    checkStrictly: true
-                },
-                CateKeys: []
-            }
-        },
-        created() {
-            this.getCateList()
-        },
-        methods: {
-            async getCateList() {
-                const {
-                    data: res
-                } = await this.$http.get('categories', {
-                    params: this.queryInfo
-                })
-                if (res.meta.status !== 200) {
-                    return this.$message.error("获取数据失败")
-                } else {
-                    this.cateList = res.data.result
-                    this.total = res.data.total
-                    console.log(res.data)
-                    console.log(this.cateList)
-                }
-            },
-            handleSizeChange(newNum) {
-                this.queryInfo.pagenum = newNum
-                this.getCateList()
-            },
-            handleCurrentChange(newSize) {
-                this.queryInfo.pagesize = newSize
-                this.getCateList()
-            },
-            showAddCate() {
-                this.addCateAialogVisible = true
-                this.getParentCateList()
-            },
-            async getParentCateList() {
-                const {
-                    data: res
-                } = await this.$http.get('categories', {
-                    params: {
-                        type: 3
-                    }
-
-                })
-                if (res.meta.status !== 200) {
-                    return this.$message.error("获取父级数据失败")
-                } else {
-                    this.parentCateList = res.data
-                }
-            },
-            parentCateChange() {
-                if (this.CateKeys.length > 0) {
-                    this.addCateRuleForm.cat_pid = this.CateKeys[this.CateKeys.length - 1]
-                    this.addCateRuleForm.cat_level = this.CateKeys.length
-                    return
-                } else {
-                    this.addCateRuleForm.cat_pid = 0
-                    this.addCateRuleForm.cat_level = 0
-                }
-            },
-            confirmAddCate() {
-                console.log(this.addCateRuleForm)
-                    // 表单域验证
-                this.$refs.addCateRuleForm.validate(async vaild => {
-                    if (!vaild) return
-                    else {
-                        const {
-                            data: res
-                        } = await this.$http.post('categories', this.addCateRuleForm)
-                        if (res.meta.status !== 201) {
-                            return this.$message.error("添加商品信息失败")
-                        } else {
-                            this.$message.success("添加商品信息成功！")
-                            this.getCateList()
-                            this.addCateAialogVisible = false
-                        }
-                    }
-                })
-            },
-            addCateClose() {
-                this.$refs.addCateRuleForm.resetFields()
-                this.CateKeys = []
-                this.addCateRuleForm.cat_level = 0
-                this.addCateRuleForm.cat_pid = 0
-            }
+export default {
+  data () {
+    return {
+      // 接收返回数据
+      cateList: [],
+      queryInfo: {
+        type: 3,
+        pagenum: 1,
+        pagesize: 5
+      },
+      // 返回数据总条数
+      total: 0,
+      columns: [{
+        label: '分类名称',
+        prop: 'cat_name'
+      }, {
+        label: '是否有效',
+        type: 'template',
+        template: 'isok'
+      }, {
+        label: '排序',
+        type: 'template',
+        template: 'order'
+      }, {
+        label: '操作',
+        type: 'template',
+        template: 'opt'
+      }],
+      addCateAialogVisible: false,
+      addCateRuleForm: {
+        cat_pid: 0,
+        cat_name: '',
+        cat_level: 0
+      },
+      addCateRules: {
+        cat_name: {
+          required: true,
+          message: '请输入分类名称',
+          trigger: 'blur'
         }
+      },
+      parentCateList: [],
+      parentCateprop: {
+        value: 'cat_id',
+        label: 'cat_name',
+        children: 'children',
+        checkStrictly: true
+      },
+      CateKeys: []
     }
+  },
+  created () {
+    this.getCateList()
+  },
+  methods: {
+    async getCateList () {
+      const {
+        data: res
+      } = await this.$http.get('categories', {
+        params: this.queryInfo
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取数据失败')
+      } else {
+        this.cateList = res.data.result
+        this.total = res.data.total
+        console.log(res.data)
+        console.log(this.cateList)
+      }
+    },
+    handleSizeChange (newNum) {
+      this.queryInfo.pagenum = newNum
+      this.getCateList()
+    },
+    handleCurrentChange (newSize) {
+      this.queryInfo.pagesize = newSize
+      this.getCateList()
+    },
+    showAddCate () {
+      this.addCateAialogVisible = true
+      this.getParentCateList()
+    },
+    async getParentCateList () {
+      const {
+        data: res
+      } = await this.$http.get('categories', {
+        params: {
+          type: 3
+        }
+
+      })
+      if (res.meta.status !== 200) {
+        return this.$message.error('获取父级数据失败')
+      } else {
+        this.parentCateList = res.data
+      }
+    },
+    parentCateChange () {
+      if (this.CateKeys.length > 0) {
+        this.addCateRuleForm.cat_pid = this.CateKeys[this.CateKeys.length - 1]
+        this.addCateRuleForm.cat_level = this.CateKeys.length
+      } else {
+        this.addCateRuleForm.cat_pid = 0
+        this.addCateRuleForm.cat_level = 0
+      }
+    },
+    confirmAddCate () {
+      console.log(this.addCateRuleForm)
+      // 表单域验证
+      this.$refs.addCateRuleForm.validate(async vaild => {
+        if (!vaild) return
+        else {
+          const {
+            data: res
+          } = await this.$http.post('categories', this.addCateRuleForm)
+          if (res.meta.status !== 201) {
+            return this.$message.error('添加商品信息失败')
+          } else {
+            this.$message.success('添加商品信息成功！')
+            this.getCateList()
+            this.addCateAialogVisible = false
+          }
+        }
+      })
+    },
+    addCateClose () {
+      this.$refs.addCateRuleForm.resetFields()
+      this.CateKeys = []
+      this.addCateRuleForm.cat_level = 0
+      this.addCateRuleForm.cat_pid = 0
+    }
+  }
+}
 </script>
 <style lang="less" scoped>
     .treeTable {
         margin: 20px 0 20px 0;
     }
-    
+
     .el-cascader {
         width: 100%;
     }

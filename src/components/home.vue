@@ -36,58 +36,58 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                // 左侧菜单数据
-                menuList: [],
-                iconObj: {
-                    125: 'iconfont icon-users',
-                    103: 'iconfont icon-tijikongjian',
-                    101: 'iconfont icon-shangpin',
-                    102: 'iconfont icon-danju',
-                    145: 'iconfont icon-baobiao'
-                },
-                isconllapse: true,
-                activePath: ''
-            }
-        },
-        created() {
-            this.getMenuList()
-            this.activePath = window.sessionStorage.getItem('activePath')
-        },
-        methods: {
-            logout() {
-                window.sessionStorage.clear('token')
-                this.$router.push('/login')
-            },
-            async getMenuList() {
-                const {
-                    data: res
-                } = await this.$http.get('menus')
-                if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
-                else this.menuList = res.data
-            },
-            toggleMenu() {
-                this.isconllapse = !this.isconllapse
-            },
-            getActiveStatus(activePath) {
-                window.sessionStorage.setItem('activePath', activePath)
-                this.activePath = activePath
-            }
-        }
+export default {
+  data () {
+    return {
+      // 左侧菜单数据
+      menuList: [],
+      iconObj: {
+        125: 'iconfont icon-users',
+        103: 'iconfont icon-tijikongjian',
+        101: 'iconfont icon-shangpin',
+        102: 'iconfont icon-danju',
+        145: 'iconfont icon-baobiao'
+      },
+      isconllapse: true,
+      activePath: ''
     }
+  },
+  created () {
+    this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath')
+  },
+  methods: {
+    logout () {
+      window.sessionStorage.clear('token')
+      this.$router.push('/login')
+    },
+    async getMenuList () {
+      const {
+        data: res
+      } = await this.$http.get('menus')
+      if (res.meta.status !== 200) return this.$message.error(res.meta.msg)
+      else this.menuList = res.data
+    },
+    toggleMenu () {
+      this.isconllapse = !this.isconllapse
+    },
+    getActiveStatus (activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
     .home-container {
         height: 100%;
     }
-    
+
     .el-menu {
         border-right: 0;
     }
-    
+
     .el-header {
         background-color: #373d41;
         display: flex;
@@ -104,7 +104,7 @@
             }
         }
     }
-    
+
     .el-aside {
         background-color: #333744;
         .iconfont {
@@ -120,7 +120,7 @@
             color: #fff;
         }
     }
-    
+
     .el-main {
         background-color: #eaedf1;
     }
