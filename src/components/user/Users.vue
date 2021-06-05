@@ -6,7 +6,7 @@
         <el-breadcrumb-item>用户列表</el-breadcrumb-item>
     </el-breadcrumb>
     <el-card class="box-card">
-        <el-row gutter=30>
+        <el-row gutter='30'>
             <el-col :span="8">
                 <el-input clearable placeholder="请输入内容" v-model="queryInfo.query" @clear="getUserList">
                     <el-button slot="append" icon="el-icon-search" @click="getUserList"></el-button>
@@ -99,249 +99,249 @@
 </template>
 
 <script>
-export default {
-  data () {
-    var checkEmail = (rule, value, cb) => {
-      const EmailRule = /^[A-Za-z0-9]+@([A-Za-z0-9_-])+(\.[A-Za-z0-9_-])+/
-      if (!EmailRule.test(value)) {
-        return cb(new Error('请输入正确的邮箱'))
-      } else cb()
-    }
-    var checkMobile = (rule, value, cb) => {
-      const MobileRule = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
-      if (!MobileRule.test(value)) {
-        return cb(new Error('请输入正确的电话'))
-      } else cb()
-    }
-    return {
-      queryInfo: {
-        query: '',
-        pagenum: 1,
-        pagesize: 2
-      },
-      userList: [],
-      total: 0,
-      dialogVisible: false,
-      editdialogVisible: false,
-      editForm: {},
-      ruleForm: {
-        username: '',
-        password: '',
-        email: '',
-        mobile: ''
-      },
-      rules: {
-        username: [{
-          required: true,
-          message: '请输入用户名',
-          trigger: 'blur'
-        }, {
-          min: 3,
-          max: 10,
-          message: '长度在 3 到 10 个字符',
-          trigger: 'blur'
-        }],
-        password: [{
-          required: true,
-          message: '请输入密码',
-          trigger: 'blur'
-        }, {
-          min: 6,
-          max: 15,
-          message: '长度在 6 到 15 个字符',
-          trigger: 'blur'
-        }],
-        email: [{
-          required: true,
-          message: '请输入邮箱',
-          trigger: 'blur'
-        }, {
-          validator: checkEmail,
-          trigger: 'blur'
-        }],
-        mobile: [{
-          required: true,
-          message: '请输入电话',
-          trigger: 'blur'
-        }, {
-          validator: checkMobile,
-          trigger: 'blur'
-        }]
-      },
-      editFormrules: {
-        email: [{
-          required: true,
-          message: '请输入邮箱',
-          trigger: 'blur'
-        }, {
-          validator: checkEmail,
-          trigger: 'blur'
-        }],
-        mobile: [{
-          required: true,
-          message: '请输入电话',
-          trigger: 'blur'
-        }, {
-          validator: checkMobile,
-          trigger: 'blur'
-        }]
-      },
-      allotRoledialogVisible: false,
-      userInfo: {},
-      rolesList: {},
-      selectRole: ''
-    }
-  },
-  created () {
-    this.getUserList()
-  },
-  methods: {
-    async getUserList () {
-      const {
-        data: res
-      } = await this.$http.get('users', {
-        params: this.queryInfo
-      })
-      if (res.meta.status !== 200) return this.$message.error('获取用户列表数据失败')
-      else {
-        this.userList = res.data.users
-        this.total = res.data.total
-      }
-      console.log(this.userList)
-      console.log(this.total)
-    },
-    handleSizeChange (newSize) {
-      this.queryInfo.pagesize = newSize
-      this.getUserList()
-    },
-    handleCurrentChange (newNum) {
-      this.queryInfo.pagenum = newNum
-      this.getUserList()
-    },
-    async userStateChange (userState) {
-      const {
-        data: res
-      } = await this.$http.put(`users/${userState.id}/state/${userState.mg_state}`)
-      if (res.meta.status !== 200) {
-        this.userList.mg_state = !this.userList.mg_state
-        this.$message.error('更新用户状态失败')
-      } else {
-        this.$message.success('更新用户状态成功')
-      }
-    },
-    formReset () {
-      this.$refs.ruleForm.resetFields()
-    },
-    // 表单域验证
-    addUser () {
-      this.$refs.ruleForm.validate(async vaild => {
-        if (!vaild) return false
-        else {
-          const {
-            data: res
-          } = await this.$http.post('users', this.ruleForm)
-          if (res.meta.status !== 201) {
-            this.$message.error('添加用户失败')
-          } else {
-            this.$message.success('添加用户成功')
+    export default {
+        data() {
+            var checkEmail = (rule, value, cb) => {
+                const EmailRule = /^[A-Za-z0-9]+@([A-Za-z0-9_-])+(\.[A-Za-z0-9_-])+/
+                if (!EmailRule.test(value)) {
+                    return cb(new Error('请输入正确的邮箱'))
+                } else cb()
+            }
+            var checkMobile = (rule, value, cb) => {
+                const MobileRule = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+                if (!MobileRule.test(value)) {
+                    return cb(new Error('请输入正确的电话'))
+                } else cb()
+            }
+            return {
+                queryInfo: {
+                    query: '',
+                    pagenum: 1,
+                    pagesize: 2
+                },
+                userList: [],
+                total: 0,
+                dialogVisible: false,
+                editdialogVisible: false,
+                editForm: {},
+                ruleForm: {
+                    username: '',
+                    password: '',
+                    email: '',
+                    mobile: ''
+                },
+                rules: {
+                    username: [{
+                        required: true,
+                        message: '请输入用户名',
+                        trigger: 'blur'
+                    }, {
+                        min: 3,
+                        max: 10,
+                        message: '长度在 3 到 10 个字符',
+                        trigger: 'blur'
+                    }],
+                    password: [{
+                        required: true,
+                        message: '请输入密码',
+                        trigger: 'blur'
+                    }, {
+                        min: 6,
+                        max: 15,
+                        message: '长度在 6 到 15 个字符',
+                        trigger: 'blur'
+                    }],
+                    email: [{
+                        required: true,
+                        message: '请输入邮箱',
+                        trigger: 'blur'
+                    }, {
+                        validator: checkEmail,
+                        trigger: 'blur'
+                    }],
+                    mobile: [{
+                        required: true,
+                        message: '请输入电话',
+                        trigger: 'blur'
+                    }, {
+                        validator: checkMobile,
+                        trigger: 'blur'
+                    }]
+                },
+                editFormrules: {
+                    email: [{
+                        required: true,
+                        message: '请输入邮箱',
+                        trigger: 'blur'
+                    }, {
+                        validator: checkEmail,
+                        trigger: 'blur'
+                    }],
+                    mobile: [{
+                        required: true,
+                        message: '请输入电话',
+                        trigger: 'blur'
+                    }, {
+                        validator: checkMobile,
+                        trigger: 'blur'
+                    }]
+                },
+                allotRoledialogVisible: false,
+                userInfo: {},
+                rolesList: {},
+                selectRole: ''
+            }
+        },
+        created() {
             this.getUserList()
-          }
+        },
+        methods: {
+            async getUserList() {
+                const {
+                    data: res
+                } = await this.$http.get('users', {
+                    params: this.queryInfo
+                })
+                if (res.meta.status !== 200) return this.$message.error('获取用户列表数据失败')
+                else {
+                    this.userList = res.data.users
+                    this.total = res.data.total
+                }
+                console.log(this.userList)
+                console.log(this.total)
+            },
+            handleSizeChange(newSize) {
+                this.queryInfo.pagesize = newSize
+                this.getUserList()
+            },
+            handleCurrentChange(newNum) {
+                this.queryInfo.pagenum = newNum
+                this.getUserList()
+            },
+            async userStateChange(userState) {
+                const {
+                    data: res
+                } = await this.$http.put(`users/${userState.id}/state/${userState.mg_state}`)
+                if (res.meta.status !== 200) {
+                    this.userList.mg_state = !this.userList.mg_state
+                    this.$message.error('更新用户状态失败')
+                } else {
+                    this.$message.success('更新用户状态成功')
+                }
+            },
+            formReset() {
+                this.$refs.ruleForm.resetFields()
+            },
+            // 表单域验证
+            addUser() {
+                this.$refs.ruleForm.validate(async vaild => {
+                    if (!vaild) return false
+                    else {
+                        const {
+                            data: res
+                        } = await this.$http.post('users', this.ruleForm)
+                        if (res.meta.status !== 201) {
+                            this.$message.error('添加用户失败')
+                        } else {
+                            this.$message.success('添加用户成功')
+                            this.getUserList()
+                        }
+                    }
+                })
+            },
+            async showUser(id) {
+                this.editdialogVisible = true
+                const {
+                    data: res
+                } = await this.$http.get('users/' + id)
+                if (res.meta.status !== 200) return this.$message.error('查询用户数据失败')
+                else {
+                    this.editForm = res.data
+                }
+            },
+            // 监听用户修改重置函数
+            editFormReset() {
+                this.$refs.editRuleForm.resetFields()
+            },
+            editUsers() {
+                this.$refs.editRuleForm.validate(async vaild => {
+                    if (!vaild) return false
+                    else {
+                        const {
+                            data: res
+                        } = await this.$http.put('users/' + this.editForm.id, {
+                            email: this.editForm.email,
+                            mobile: this.editForm.mobile
+                        })
+                        console.log(res)
+                        if (res.meta.status !== 200) {
+                            this.$message.error('更新用户信息失败')
+                        } else {
+                            this.$message.success('更新用户信息成功')
+                            this.editdialogVisible = false
+                            this.getUserList()
+                        }
+                    }
+                })
+            },
+            async deleteUser(id) {
+                const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).catch(err => err)
+                if (confirmResult !== 'confirm') {
+                    return this.$message.info('用户取消了删除操作')
+                } else {
+                    const {
+                        data: res
+                    } = await this.$http.delete('users/' + id)
+                    if (res.meta.status !== 200) {
+                        this.$message.error('删除用户失败')
+                    } else {
+                        this.$message.success('删除用户成功')
+                        this.getUserList()
+                    }
+                }
+            },
+            async allotRole(role) {
+                this.allotRoledialogVisible = true
+                this.userInfo = role
+                const {
+                    data: res
+                } = await this.$http.get('roles')
+                if (res.meta.status !== 200) {
+                    return this.$message.error('获取角色列表失败')
+                } else {
+                    this.rolesList = res.data
+                }
+            },
+            // 更新分配角色
+            async setAllotRole() {
+                if (!this.selectRole) {
+                    this.$message.error('请选择要更新的角色')
+                } else {
+                    const {
+                        data: res
+                    } = await this.$http.put(`users/${this.userInfo.id}/role`, {
+                        rid: this.selectRole
+                    })
+                    if (res.meta.status !== 200) {
+                        return this.$message.error('设置角色失败')
+                    } else {
+                        this.$message.success('设置角色成功')
+                        this.getUserList()
+                        this.allotRoledialogVisible = false
+                    }
+                }
+            },
+            // 重置选择角色
+            setAllotClosed() {
+                this.selectRole = ''
+                this.userInfo = {}
+            }
         }
-      })
-    },
-    async showUser (id) {
-      this.editdialogVisible = true
-      const {
-        data: res
-      } = await this.$http.get('users/' + id)
-      if (res.meta.status !== 200) return this.$message.error('查询用户数据失败')
-      else {
-        this.editForm = res.data
-      }
-    },
-    // 监听用户修改重置函数
-    editFormReset () {
-      this.$refs.editRuleForm.resetFields()
-    },
-    editUsers () {
-      this.$refs.editRuleForm.validate(async vaild => {
-        if (!vaild) return false
-        else {
-          const {
-            data: res
-          } = await this.$http.put('users/' + this.editForm.id, {
-            email: this.editForm.email,
-            mobile: this.editForm.mobile
-          })
-          console.log(res)
-          if (res.meta.status !== 200) {
-            this.$message.error('更新用户信息失败')
-          } else {
-            this.$message.success('更新用户信息成功')
-            this.editdialogVisible = false
-            this.getUserList()
-          }
-        }
-      })
-    },
-    async deleteUser (id) {
-      const confirmResult = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).catch(err => err)
-      if (confirmResult !== 'confirm') {
-        return this.$message.info('用户取消了删除操作')
-      } else {
-        const {
-          data: res
-        } = await this.$http.delete('users/' + id)
-        if (res.meta.status !== 200) {
-          this.$message.error('删除用户失败')
-        } else {
-          this.$message.success('删除用户成功')
-          this.getUserList()
-        }
-      }
-    },
-    async allotRole (role) {
-      this.allotRoledialogVisible = true
-      this.userInfo = role
-      const {
-        data: res
-      } = await this.$http.get('roles')
-      if (res.meta.status !== 200) {
-        return this.$message.error('获取角色列表失败')
-      } else {
-        this.rolesList = res.data
-      }
-    },
-    // 更新分配角色
-    async setAllotRole () {
-      if (!this.selectRole) {
-        this.$message.error('请选择要更新的角色')
-      } else {
-        const {
-          data: res
-        } = await this.$http.put(`users/${this.userInfo.id}/role`, {
-          rid: this.selectRole
-        })
-        if (res.meta.status !== 200) {
-          return this.$message.error('设置角色失败')
-        } else {
-          this.$message.success('设置角色成功')
-          this.getUserList()
-          this.allotRoledialogVisible = false
-        }
-      }
-    },
-    // 重置选择角色
-    setAllotClosed () {
-      this.selectRole = ''
-      this.userInfo = {}
     }
-  }
-}
 </script>
 
 <style lang="less" scoped>
